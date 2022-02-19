@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useEffect, useState } from "react";
+import PTag from "./compornent/ptag";
+import Heading from "./compornent/heading";
 
 function App() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const queryWeather = () => {
+    fetch("https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json")
+      .then((response) => response.json())
+      .then((weather) => {
+        setData(weather[0].timeSeries[0].areas[0]);
+        setLoading(false);
+      });
+  };
+  useEffect(() => {
+    queryWeather();
+  }, []);
+
+  let weatherInfo;
+  if (loading) {
+    weatherInfo = <p>loading</p>;
+  } else {
+    weatherInfo = (
+      <>
+        <PTag
+          name={data.area.name}
+          days={"明日の天気"}
+          weather={data.weathers[0]}
+        />
+        <PTag
+          name={data.area.name}
+          days={"明後日の天気"}
+          weather={data.weathers[1]}
+        />
+        <PTag
+          name={data.area.name}
+          days={"明々後日の天気"}
+          weather={data.weathers[2]}
+        />
+      </>
+    );
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Heading pageName={"天気"} weather={weatherInfo} />
+    </>
   );
 }
-
 export default App;
