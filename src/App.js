@@ -17,12 +17,10 @@ function App() {
   useEffect(() => {
     queryWeather();
   }, []);
-
-  let weatherInfo;
-  if (loading) {
-    weatherInfo = <p>loading</p>;
-  } else {
-    weatherInfo = (
+  const Weather = (data) => {
+    // console.log(data);
+    // data.map((num, index) => console.log(num));
+    return (
       <>
         <PTag
           name={data.area.name}
@@ -41,11 +39,13 @@ function App() {
         />
       </>
     );
-  }
+  };
+  const judge = loading ? console.log("none") : Weather(data);
   return (
     <>
-      <Heading pageName={"天気"} weather={weatherInfo} />
+      <Heading pageName={"天気"} weather={judge} />
     </>
   );
 }
+
 export default App;
